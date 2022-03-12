@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(PlayerInput))]
 public class PlayerController_Script : MonoBehaviour
 {
     // Camera
@@ -19,8 +18,6 @@ public class PlayerController_Script : MonoBehaviour
     [SerializeField]
     private float playerSpeed = 12.0f;
     [SerializeField]
-    private float jumpHeight = 1.0f;
-    [SerializeField]
     private float gravityValue = -9.81f;
     [SerializeField]
     private float moveSpeed = 10f;
@@ -30,17 +27,16 @@ public class PlayerController_Script : MonoBehaviour
     [SerializeField] [Range(1, 15)] private float jumpVelocity;
     [SerializeField] private float groundDistance = 0.4f, fallMultiplier = 2.5f;
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private bool grounded;
+    [SerializeField] private bool isGrounded;
+    private float jumpTimeCounter;
+    public float jumpTime;
+    private bool isJumping;
 
-    #region Input variables
-
-    [SerializeField] private PlayerInput playerInput;
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction interactAction;
-    private InputAction dropAction;
-
-    #endregion
+    // Object Selection
+    [SerializeField] private GameObject itemPickedUp;
+    public GameObject destination;
+    private string selectableTag = "Interactable";
+    private float rayDistance = 10f;
 
     // Constants
     private const float zero = 0f;
@@ -49,19 +45,7 @@ public class PlayerController_Script : MonoBehaviour
     {
         QualitySettings.vSyncCount = 1;
         Application.targetFrameRate = 144;
-    }
 
-    private void OnEnable()
-    {
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-        interactAction = playerInput.actions["Interact"];
-        dropAction = playerInput.actions["Drop"];
-        moveAction.performed += ctx => MoveInput(ctx.ReadValue<Vector2>());
-        moveAction.canceled += ctx => MoveInput(ctx.ReadValue<Vector2>());
-        jumpAction.performed += _ => JumpInput();
-        interactAction.performed += _ => InteractInput();
-        dropAction.performed += _ => DropInput();
     }
 
     private void Start()
@@ -74,6 +58,14 @@ public class PlayerController_Script : MonoBehaviour
     void Update()
     {
         PlayerGroundCheck();
+        PlayerRayCast();
+        MoveInput();
+        JumpInput();
+
+        if (itemPickedUp != null)
+        {
+            Throw();
+        }
     }
 
     private void FixedUpdate()
@@ -83,30 +75,79 @@ public class PlayerController_Script : MonoBehaviour
 
     #region Inputs & Camera
 
-    void MoveInput(Vector2 input)
+    void MoveInput()
     {
-        direction = new Vector3(input.x, zero, input.y).normalized;
+        var moveX = Input.GetAxisRaw("Horizontal");
+        var moveY = Input.GetAxisRaw("Vertical");
+
+        direction = new Vector3(moveX, zero, moveY).normalized;
     }
 
     void JumpInput()
     {
-        if (grounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             myRb.velocity = Vector3.up * jumpVelocity;
         }
     }
 
-    void InteractInput()
+    void PickUp(GameObject item)
     {
-
+        // Pick up objects
+        if (itemPickedUp == null)
+        {
+            Debug.Log("Item picked up " + item.name);
+            itemPickedUp = item;
+            item.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            item.GetComponent<Rigidbody>().useGravity = false;
+            item.transform.position = destination.transform.position;
+            item.transform.parent = destination.transform;
+        }
     }
 
-    void DropInput()
+    void Throw()
     {
-
+        if (Input.GetMouseButton(1))
+        {
+            itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            itemPickedUp.GetComponent<Rigidbody>().useGravity = true;
+            itemPickedUp.GetComponent<Rigidbody>().AddForce(cameraTransform.forward * 1000);
+            itemPickedUp.transform.parent = null;
+            itemPickedUp = null;
+        }
     }
 
     #endregion
+
+    void PlayerRayCast()
+    {
+        #region Raycast Properties
+
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        RaycastHit hit;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        #endregion
+
+        // ----------------------- Start of Raycasting -------------------------------
+
+        if (Physics.Raycast(ray, out hit, rayDistance)) // Number identifies length of raycast
+        {
+            Debug.DrawLine(ray.origin, hit.point, Color.red); // can be removed
+            var selection = hit.collider;
+
+            // Basic Interactable Object
+            if (selection.CompareTag(selectableTag))
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    GameObject item = hit.collider.gameObject;
+                    PickUp(item);
+                }
+            }
+        }
+    }
 
     void RigidMovement()
     {
@@ -121,6 +162,7 @@ public class PlayerController_Script : MonoBehaviour
     public void PlayerGroundCheck()
     {
         // Check if player is grounded (stops infinite jumps)
-        grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     }
+
 }
