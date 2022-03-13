@@ -35,8 +35,8 @@ public class PlayerController_Script : MonoBehaviour
     // Object Selection
     [SerializeField] private GameObject itemPickedUp;
     public GameObject destination;
-    private string selectableTag = "Interactable";
     private float rayDistance = 10f;
+    public Text capTxt;
 
     // Constants
     private const float zero = 0f;
@@ -98,10 +98,17 @@ public class PlayerController_Script : MonoBehaviour
         {
             Debug.Log("Item picked up " + item.name);
             itemPickedUp = item;
-            item.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            item.GetComponent<Rigidbody>().useGravity = false;
-            item.transform.position = destination.transform.position;
-            item.transform.parent = destination.transform;
+
+            if (itemPickedUp.layer == 9)
+            {
+                capTxt.enabled = true;
+            }
+
+            itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            itemPickedUp.GetComponent<Rigidbody>().useGravity = false;
+            itemPickedUp.transform.position = destination.transform.position;
+            itemPickedUp.transform.parent = destination.transform;
+            itemPickedUp.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
         }
     }
 
@@ -109,6 +116,12 @@ public class PlayerController_Script : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
+            if (itemPickedUp.layer == 9)
+            {
+                capTxt.enabled = false;
+                itemPickedUp.GetComponent<Container_Script>().thrown = true;
+            }
+
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = true;
             itemPickedUp.GetComponent<Rigidbody>().AddForce(cameraTransform.forward * 1000);
@@ -136,6 +149,7 @@ public class PlayerController_Script : MonoBehaviour
         {
             Debug.DrawLine(ray.origin, hit.point, Color.red); // can be removed
             var selection = hit.collider;
+            string selectableTag = "Interactable";
 
             // Basic Interactable Object
             if (selection.CompareTag(selectableTag))
