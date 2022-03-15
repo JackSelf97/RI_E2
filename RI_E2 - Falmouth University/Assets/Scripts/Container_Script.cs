@@ -9,6 +9,7 @@ public class Container_Script : MonoBehaviour
     public bool thrown = false;
     public List<GameObject> collectedTrash = new List<GameObject>();
 
+
     private void Start()
     {
         playerCont = GameObject.Find("Player").GetComponent<PlayerController_Script>();
@@ -44,11 +45,11 @@ public class Container_Script : MonoBehaviour
             if (collision.gameObject.layer == 8) // if ground
             {
                 trashCount = 0; // reset
-
+                
                 for (int i = 0; i < collectedTrash.Count; i++)
                 {
                     collectedTrash[i].SetActive(true);
-                    collectedTrash[i].transform.position = gameObject.transform.position;
+                    collectedTrash[i].transform.position = gameObject.transform.position + new Vector3(0,0.5f,0);
                 }
 
                 collectedTrash.Clear();

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6972029814459662405}
   - component: {fileID: 6862340683677781732}
   - component: {fileID: 7528740410096815968}
+  - component: {fileID: 8439389088687725126}
   m_Layer: 9
   m_Name: Container
   m_TagString: Interactable
@@ -107,7 +108,7 @@ MeshCollider:
   m_GameObject: {fileID: 6862340683675688702}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -125,3 +126,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trashCount: 0
+  thrown: 0
+  collectedTrash: []
+--- !u!135 &8439389088687725126
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6862340683675688702}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.19955745
+  m_Center: {x: 0.00041484833, y: 0.041559353, z: -0.00000044703484}

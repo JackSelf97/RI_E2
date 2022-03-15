@@ -35,7 +35,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Coundown timer
         time -= Time.deltaTime;
         countdownTxt.text = "Time: " + time.ToString("00");
+
+        // Scoring
+        scoreTxt.text = "Score: " + playerScore.ToString();
     }
 }
