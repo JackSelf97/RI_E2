@@ -28,9 +28,6 @@ public class PlayerController_Script : MonoBehaviour
     [SerializeField] private float groundDistance = 0.4f, fallMultiplier = 2.5f;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private bool isGrounded;
-    private float jumpTimeCounter;
-    public float jumpTime;
-    private bool isJumping;
 
     // Object Selection
     [SerializeField] private GameObject itemPickedUp;
@@ -45,7 +42,6 @@ public class PlayerController_Script : MonoBehaviour
     {
         QualitySettings.vSyncCount = 1;
         Application.targetFrameRate = 144;
-
     }
 
     private void Start()
