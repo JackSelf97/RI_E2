@@ -52,6 +52,7 @@ public class Container_Script : MonoBehaviour
                 for (int i = 0; i < collectedTrash.Count; i++)
                 {
                     collectedTrash[i].SetActive(true);
+                    collectedTrash[i].GetComponent<Trash_Script>().lifeTime = 30; // reset lifetime
                     collectedTrash[i].transform.position = gameObject.transform.position + new Vector3(0, 0.5f, 0);
                 }
 

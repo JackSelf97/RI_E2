@@ -21,6 +21,7 @@ public class PlayerController_Script : MonoBehaviour
     private float gravityValue = -9.81f;
     [SerializeField]
     private float moveSpeed = 10f;
+    private float throwForce = 1500f;
     public bool isActive;
     
 
@@ -105,6 +106,12 @@ public class PlayerController_Script : MonoBehaviour
                 itemPickedUp.GetComponent<Container_Script>().onHand = true;
                 capTxt.enabled = true;
             }
+            if (itemPickedUp.layer == 10)
+            {
+                itemPickedUp.GetComponent<Trash_Script>().pickedUp = true;
+                itemPickedUp.GetComponent<Trash_Script>().lifeTime = 30;
+            }
+
 
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = false;
@@ -124,10 +131,14 @@ public class PlayerController_Script : MonoBehaviour
                 itemPickedUp.GetComponent<Container_Script>().thrown = true;
                 itemPickedUp.GetComponent<Container_Script>().onHand = false;
             }
+            if (itemPickedUp.layer == 10)
+            {
+                itemPickedUp.GetComponent<Trash_Script>().pickedUp = false;
+            }
 
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = true;
-            itemPickedUp.GetComponent<Rigidbody>().AddForce(cameraTransform.forward * 1000);
+            itemPickedUp.GetComponent<Rigidbody>().AddForce(cameraTransform.forward * throwForce);
             itemPickedUp.transform.parent = null;
             itemPickedUp = null;
         }

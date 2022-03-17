@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float time = 120f;
     public CinemachineVirtualCamera vCam1, vCam2;
     public int playerScore = 0;
-    public Text countdownTxt, scoreTxt;
-    public GameObject canvasMenu, canvasPlayer, canvasPause;
+    public Text countdownTxt, scoreTxt, totalScoreTxt;
+    public GameObject canvasMenu, canvasPlayer, canvasPause, canvasVictory;
     public MeshRenderer playerMesh;
     public GameObject player;
     private PlayerController_Script playerCont;
@@ -49,6 +49,11 @@ public class GameManager : MonoBehaviour
             // Coundown timer
             time -= Time.deltaTime;
             countdownTxt.text = "Time: " + time.ToString("00");
+            if (time <= 0)
+            {
+                time = 0;
+                VictoryState();
+            }
 
             // Scoring
             scoreTxt.text = "Score: " + playerScore.ToString();
@@ -76,6 +81,19 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void VictoryState()
+    {
+        canvasPlayer.SetActive(false);
+        canvasVictory.SetActive(true);
+        vCam2.enabled = true;
+        vCam1.enabled = false;
+        player.GetComponent<PlayerController_Script>().isActive = false;
+        Cursor.lockState = CursorLockMode.None;
+
+        // Scoring
+        totalScoreTxt.text = "Score: " + playerScore.ToString();
+    }
+
     public void PauseGame()
     {
         isPaused = !isPaused;
@@ -93,7 +111,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+    public void RestartGame() // not finished yet
     {
         playerScore = 0;
         time = 120;
