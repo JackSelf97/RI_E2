@@ -8,7 +8,7 @@ public class Container_Script : MonoBehaviour
     private PlayerController_Script playerCont;
     public bool thrown = false;
     public List<GameObject> collectedTrash = new List<GameObject>();
-
+    public bool onHand = false;
 
     private void Start()
     {
@@ -20,40 +20,46 @@ public class Container_Script : MonoBehaviour
         playerCont.capTxt.text = "Capacity: " + trashCount + "/10";
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.layer == 10) // if trash
+        if (onHand == true)
         {
-            if (trashCount < 10)
+            if (collision.gameObject.layer == 10) // if trash
             {
-                // Update UI
-                trashCount++;
+                if (trashCount < 10)
+                {
+                    // Update UI
+                    trashCount++;
 
-                //Destory trash
-                collectedTrash.Add(collision.gameObject);
-                collision.gameObject.SetActive(false);
-                collision.gameObject.layer = default;
-            }
-            else
-            {
-                Debug.Log("I'm full!");
+                    //Destory trash
+                    collectedTrash.Add(collision.gameObject);
+                    collision.gameObject.SetActive(false);
+                    //collision.gameObject.layer = default;
+                }
+                else
+                {
+                    Debug.Log("I'm full!");
+                }
             }
         }
 
         if (thrown)
         {
+            onHand = false;
+
             if (collision.gameObject.layer == 8) // if ground
             {
                 trashCount = 0; // reset
-                
+
                 for (int i = 0; i < collectedTrash.Count; i++)
                 {
                     collectedTrash[i].SetActive(true);
-                    collectedTrash[i].transform.position = gameObject.transform.position + new Vector3(0,0.5f,0);
+                    collectedTrash[i].transform.position = gameObject.transform.position + new Vector3(0, 0.5f, 0);
                 }
 
                 collectedTrash.Clear();
             }
         }
+
     }
 }

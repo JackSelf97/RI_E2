@@ -100,11 +100,12 @@ public class PlayerController_Script : MonoBehaviour
                 capTxt.enabled = true;
             }
 
+            itemPickedUp.GetComponent<Container_Script>().onHand = true;
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = false;
             itemPickedUp.transform.position = destination.transform.position;
             itemPickedUp.transform.parent = destination.transform;
-            itemPickedUp.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            itemPickedUp.transform.localRotation = Quaternion.Euler(new Vector3(0, 90, 0));
         }
     }
 
@@ -165,7 +166,7 @@ public class PlayerController_Script : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(zero, yawCam, zero), camTurnSpeed * Time.fixedDeltaTime); // turns the character left/right in sync with camera
         if (direction.magnitude >= 0.1f) // if we are getting a movement
         {
-            myRb.MovePosition(transform.position + (transform.right * direction.x + transform.forward * direction.z) * Time.fixedDeltaTime * moveSpeed);
+            myRb.MovePosition(transform.position + (transform.right * direction.x + transform.forward * direction.z).normalized * Time.fixedDeltaTime * moveSpeed);
         }
     }
 
