@@ -45,8 +45,6 @@ public class Container_Script : MonoBehaviour
 
         if (thrown)
         {
-            onHand = false;
-
             if (collision.gameObject.layer == 8) // if ground
             {
                 trashCount = 0; // reset

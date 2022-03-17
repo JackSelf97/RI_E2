@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e4d0b1ed88fffe6498176e8868e983d9
+guid: 8ee6005899f11a646bc8ed082b90b0ae
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Goma Block
+  fontName: Westmeath
   fontNames:
-  - Goma Block
+  - Westmeath
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

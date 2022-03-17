@@ -21,6 +21,8 @@ public class PlayerController_Script : MonoBehaviour
     private float gravityValue = -9.81f;
     [SerializeField]
     private float moveSpeed = 10f;
+    public bool isActive;
+    
 
     // Jumping
     [SerializeField] private Transform groundCheck;
@@ -48,19 +50,22 @@ public class PlayerController_Script : MonoBehaviour
     {
         myRb = GetComponent<Rigidbody>();
         cameraTransform = Camera.main.transform;
-        Cursor.lockState = CursorLockMode.Locked;
+        isActive = false;
     }
 
     void Update()
     {
-        PlayerGroundCheck();
-        PlayerRayCast();
-        MoveInput();
-        JumpInput();
-
-        if (itemPickedUp != null)
+        if (isActive)
         {
-            Throw();
+            PlayerGroundCheck();
+            PlayerRayCast();
+            MoveInput();
+            JumpInput();
+
+            if (itemPickedUp != null)
+            {
+                Throw();
+            }
         }
     }
 
@@ -97,10 +102,10 @@ public class PlayerController_Script : MonoBehaviour
 
             if (itemPickedUp.layer == 9)
             {
+                itemPickedUp.GetComponent<Container_Script>().onHand = true;
                 capTxt.enabled = true;
             }
 
-            itemPickedUp.GetComponent<Container_Script>().onHand = true;
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = false;
             itemPickedUp.transform.position = destination.transform.position;
@@ -117,6 +122,7 @@ public class PlayerController_Script : MonoBehaviour
             {
                 capTxt.enabled = false;
                 itemPickedUp.GetComponent<Container_Script>().thrown = true;
+                itemPickedUp.GetComponent<Container_Script>().onHand = false;
             }
 
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
