@@ -55,7 +55,7 @@ public class Trash_Script : MonoBehaviour
         }
     }
 
-    private IEnumerator ShrinkDeath()
+    public IEnumerator ShrinkDeath()
     {
         shrink = true;
         gameObject.layer = default;

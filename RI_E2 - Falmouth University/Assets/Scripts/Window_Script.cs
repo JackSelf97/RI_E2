@@ -16,7 +16,7 @@ public class Window_Script : MonoBehaviour
             timer += Time.deltaTime;
             if (timer > 2)
             {
-                int ranNo = Random.Range(0, 3);
+                int ranNo = Random.Range(0, 9);
                 Debug.Log(ranNo);
                 Instantiate(trash[ranNo], spawnPoint.transform.position, Quaternion.identity);
                 Debug.Log("Here comes some trash!");

@@ -12,10 +12,11 @@ public class GameManager : MonoBehaviour
     public Text countdownTxt, scoreTxt, totalScoreTxt;
     public GameObject canvasMenu, canvasPlayer, canvasPause, canvasVictory;
     public MeshRenderer playerMesh;
-    public GameObject player;
+    public GameObject player, playerSpawnPos;
     private PlayerController_Script playerCont;
     public bool startGame;
-    private bool isPaused;
+    private bool isPaused, hasWon;
+    
 
     #region Singleton & Awake
     public static GameManager gMan = null; // should always initilize
@@ -89,6 +90,7 @@ public class GameManager : MonoBehaviour
         vCam1.enabled = false;
         player.GetComponent<PlayerController_Script>().isActive = false;
         Cursor.lockState = CursorLockMode.None;
+        hasWon = true;
 
         // Scoring
         totalScoreTxt.text = "Score: " + playerScore.ToString();
@@ -113,8 +115,34 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame() // not finished yet
     {
+        if (isPaused)
+        {
+            PauseGame();
+        }
+
+        if (hasWon) // reset if won
+        {
+            canvasVictory.SetActive(false);
+            canvasPlayer.SetActive(true);
+            vCam1.enabled = true;
+            vCam2.enabled = false;
+            player.GetComponent<PlayerController_Script>().isActive = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            hasWon = false;
+        }
+        
         playerScore = 0;
         time = 120;
+
+        Trash_Script[] trashItems = FindObjectsOfType<Trash_Script>();
+        for (int i = 0; i < trashItems.Length; i++)
+        {
+            trashItems[i].StartCoroutine(trashItems[i].ShrinkDeath());
+            //Destroy(trashItems[i].gameObject);
+            Debug.Log("Clean up in progress...");
+        }
+
+        player.transform.position = playerSpawnPos.transform.position; // send the player back to the starting pos
     }
 
     #endregion
