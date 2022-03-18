@@ -22,9 +22,9 @@ public class Trash_Script : MonoBehaviour
 
         collected = false;
 
-        xScale = 0.5f;
-        yScale = 0.5f;
-        zScale = 0.5f;
+        xScale = 1f; // size of the objects
+        yScale = 1f;
+        zScale = 1f;
     }
 
     private void Update()
