@@ -65,8 +65,9 @@ public class PlayerController_Script : MonoBehaviour
 
             if (itemPickedUp != null)
             {
+                capTxt.text = "Capacity: " + itemPickedUp.GetComponent<Container_Script>().trashCount + "/10";
                 Throw();
-            }
+            } 
         }
     }
 
@@ -106,6 +107,7 @@ public class PlayerController_Script : MonoBehaviour
             {
                 itemPickedUp.GetComponent<Container_Script>().onHand = true;
                 capTxt.enabled = true;
+                
             }
             if (itemPickedUp.layer == 10)
             {

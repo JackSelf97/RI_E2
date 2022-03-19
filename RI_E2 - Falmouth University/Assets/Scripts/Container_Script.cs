@@ -17,7 +17,7 @@ public class Container_Script : MonoBehaviour
 
     private void Update()
     {
-        playerCont.capTxt.text = "Capacity: " + trashCount + "/10";
+        //playerCont.capTxt.text = "Capacity: " + trashCount + "/10";
     }
 
     private void OnTriggerEnter(Collider collision)

@@ -58,6 +58,10 @@ public class GameManager : MonoBehaviour
 
             // Scoring
             scoreTxt.text = "Score: " + playerScore.ToString();
+
+            // Play music
+            FindObjectOfType<AudioManager>().StopSound("Track_1");
+            
         }
 
         if (playerCont.isActive)
@@ -158,5 +162,6 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerController_Script>().isActive = true;
         Cursor.lockState = CursorLockMode.Locked;
         startGame = true;
+        FindObjectOfType<AudioManager>().PlaySound("Track_2");
     }
 }
