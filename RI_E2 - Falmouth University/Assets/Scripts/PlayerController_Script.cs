@@ -72,7 +72,8 @@ public class PlayerController_Script : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RigidMovement();
+        if (isActive)
+            RigidMovement();
     }
 
     #region Inputs & Camera
