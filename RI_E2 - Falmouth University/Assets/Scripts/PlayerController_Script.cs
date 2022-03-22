@@ -5,14 +5,13 @@ using UnityEngine.EventSystems;
 public class PlayerController_Script : MonoBehaviour
 {
     // Camera
+    [Header("Camera & Player Properties")]
     public Camera cam;
-    private float turnSpeed = 0.1f, camTurnSpeed = 15f;
+    private float camTurnSpeed = 15f;
     private Transform cameraTransform;
     public Camera fpsCam;
 
     // Player properties
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
     private Vector3 direction;
     private Rigidbody myRb;
     [SerializeField]
@@ -23,9 +22,9 @@ public class PlayerController_Script : MonoBehaviour
     private float moveSpeed = 10f;
     private float throwForce = 1500f;
     public bool isActive;
-    
 
     // Jumping
+    [Header("Jumping")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] [Range(1, 15)] private float jumpVelocity;
     [SerializeField] private float groundDistance = 0.4f, fallMultiplier = 2.5f;
@@ -33,13 +32,15 @@ public class PlayerController_Script : MonoBehaviour
     [SerializeField] private bool isGrounded;
 
     // Object Selection
+    [Header("Object Selection & UI")]
     [SerializeField] private GameObject itemPickedUp;
     public GameObject destination;
-    private float rayDistance = 10f;
+    private float rayDistance = 7f;
     public Text capTxt;
 
     // Constants
     private const float zero = 0f;
+    private const int containerLayer = 9, trashLayer = 10;
 
     private void Awake()
     {
@@ -65,7 +66,10 @@ public class PlayerController_Script : MonoBehaviour
 
             if (itemPickedUp != null)
             {
-                capTxt.text = "Capacity: " + itemPickedUp.GetComponent<Container_Script>().trashCount + "/10";
+                if (itemPickedUp.layer == containerLayer)
+                {
+                    capTxt.text = "Capacity: " + itemPickedUp.GetComponent<Container_Script>().trashCount + "/10";
+                }
                 Throw();
             } 
         }
@@ -83,7 +87,6 @@ public class PlayerController_Script : MonoBehaviour
     {
         var moveX = Input.GetAxisRaw("Horizontal");
         var moveY = Input.GetAxisRaw("Vertical");
-
         direction = new Vector3(moveX, zero, moveY).normalized;
     }
 
@@ -100,21 +103,20 @@ public class PlayerController_Script : MonoBehaviour
         // Pick up objects
         if (itemPickedUp == null)
         {
-            Debug.Log("Item picked up " + item.name);
+            //Debug.Log("Item picked up " + item.name);
             itemPickedUp = item;
 
-            if (itemPickedUp.layer == 9)
+            if (itemPickedUp.layer == containerLayer)
             {
                 itemPickedUp.GetComponent<Container_Script>().onHand = true;
                 capTxt.enabled = true;
                 
             }
-            if (itemPickedUp.layer == 10)
+            if (itemPickedUp.layer == trashLayer)
             {
                 itemPickedUp.GetComponent<Trash_Script>().pickedUp = true;
                 itemPickedUp.GetComponent<Trash_Script>().lifeTime = 30;
             }
-
 
             itemPickedUp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             itemPickedUp.GetComponent<Rigidbody>().useGravity = false;
@@ -128,13 +130,13 @@ public class PlayerController_Script : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            if (itemPickedUp.layer == 9)
+            if (itemPickedUp.layer == containerLayer)
             {
                 capTxt.enabled = false;
                 itemPickedUp.GetComponent<Container_Script>().thrown = true;
                 itemPickedUp.GetComponent<Container_Script>().onHand = false;
             }
-            if (itemPickedUp.layer == 10)
+            if (itemPickedUp.layer == trashLayer)
             {
                 itemPickedUp.GetComponent<Trash_Script>().pickedUp = false;
             }
@@ -195,5 +197,4 @@ public class PlayerController_Script : MonoBehaviour
         // Check if player is grounded (stops infinite jumps)
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     }
-
 }

@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     public int playerScore = 0;
     public Text countdownTxt, scoreTxt, totalScoreTxt;
     public GameObject canvasMenu, canvasPlayer, canvasPause, canvasVictory;
-    public MeshRenderer playerMesh;
     public GameObject player, playerSpawnPos;
     private PlayerController_Script playerCont;
     public bool startGame;
@@ -153,15 +152,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DelayGameState()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         canvasMenu.SetActive(false);
-        vCam1.enabled = true;
-        vCam2.enabled = false;
         canvasPlayer.SetActive(true);
-        playerMesh.enabled = true; // does not need a mesh
         player.GetComponent<PlayerController_Script>().isActive = true;
         Cursor.lockState = CursorLockMode.Locked;
         startGame = true;
         FindObjectOfType<AudioManager>().PlaySound("Track_2");
+        vCam1.enabled = true;
+        vCam2.enabled = false;
     }
 }

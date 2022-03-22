@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Window_Script : MonoBehaviour
 {
     public GameObject spawnPoint;
     public GameObject[] trash;
     private float timer;
+    public float timeLimit = 2;
 
     // Update is called once per frame
     void Update()
@@ -14,7 +13,7 @@ public class Window_Script : MonoBehaviour
         if (GameManager.gMan.startGame)
         {
             timer += Time.deltaTime;
-            if (timer > 2)
+            if (timer > timeLimit)
             {
                 int ranNo = Random.Range(0, 9);
                 Debug.Log(ranNo);

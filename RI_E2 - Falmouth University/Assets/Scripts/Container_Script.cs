@@ -5,20 +5,9 @@ using UnityEngine;
 public class Container_Script : MonoBehaviour
 {
     public int trashCount;
-    private PlayerController_Script playerCont;
     public bool thrown = false;
     public List<GameObject> collectedTrash = new List<GameObject>();
     public bool onHand = false;
-
-    private void Start()
-    {
-        playerCont = GameObject.Find("Player").GetComponent<PlayerController_Script>();
-    }
-
-    private void Update()
-    {
-        //playerCont.capTxt.text = "Capacity: " + trashCount + "/10";
-    }
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -59,6 +48,5 @@ public class Container_Script : MonoBehaviour
                 collectedTrash.Clear();
             }
         }
-
     }
 }
