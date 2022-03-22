@@ -162,4 +162,9 @@ public class GameManager : MonoBehaviour
         vCam1.enabled = true;
         vCam2.enabled = false;
     }
+
+    public void PlayHoverUIButtonSound()
+    {
+        FindObjectOfType<AudioManager>().PlaySound("UI_Hover");
+    }
 }
